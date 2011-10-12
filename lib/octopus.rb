@@ -13,14 +13,18 @@ module Octopus
   def self.config()
     file_name = Octopus.directory() + "/config/shards.yml"
 
-    if File.exists? file_name
-      @config ||= HashWithIndifferentAccess.new(YAML.load(ERB.new(File.open(file_name).read()).result))[Octopus.env()]
+    if File.exists?(file_name) and not File.exists?("tmp/replication_down")
+      if @config.nil? or @config.empty?
+        @config = HashWithIndifferentAccess.new(YAML.load(ERB.new(File.open(file_name).read()).result))[Octopus.env()]
+      end
 
       if @config && @config['environments']
         self.environments = @config['environments']
       end
     else
-      @config ||= HashWithIndifferentAccess.new
+      if @config.nil? or not @config.empty?
+        @config ||= HashWithIndifferentAccess.new
+      end
     end
 
     @config
