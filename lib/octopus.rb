@@ -13,30 +13,15 @@ module Octopus
   def self.config()
     file_name = Octopus.directory() + "/config/shards.yml"
 
-    Rails.logger.debug "exists - #{File.exists?("tmp/replication_down")}"
-    Rails.logger.debug "nil - #{@config.nil?}"
-    unless @config.nil?
-      Rails.logger.debug "empty - #{@config.empty?}"
-    end
-
-    if File.exists?(file_name) and not File.exists?("tmp/replication_down")
-      Rails.logger.debug "using shards"
-
-      if @config.nil? or @config.empty?
-        @config = HashWithIndifferentAccess.new(YAML.load(ERB.new(File.open(file_name).read()).result))[Octopus.env()]
-      end
+    if File.exists?(file_name)
+      @config ||= HashWithIndifferentAccess.new(YAML.load(ERB.new(File.open(file_name).read()).result))[Octopus.env()]
 
       if @config && @config['environments']
         self.environments = @config['environments']
       end
     else
-      Rails.logger.debug "not using shards"
-
-      if @config.nil? or not @config.empty?
-        @config = HashWithIndifferentAccess.new
-      end
+      @config ||= HashWithIndifferentAccess.new
     end
-    Rails.logger.debug @config.inspect
 
     @config
   end

@@ -87,6 +87,7 @@ class Octopus::Proxy
   end
 
   def shard_name
+    return :master if File.exists?("tmp/replication_down")
     current_shard.is_a?(Array) ? current_shard.first : current_shard
   end
 
