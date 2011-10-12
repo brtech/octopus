@@ -14,6 +14,7 @@ module Octopus
     file_name = Octopus.directory() + "/config/shards.yml"
 
     if File.exists?(file_name) and not File.exists?("tmp/replication_down")
+      p "using shards"
       if @config.nil? or @config.empty?
         @config = HashWithIndifferentAccess.new(YAML.load(ERB.new(File.open(file_name).read()).result))[Octopus.env()]
       end
@@ -22,10 +23,12 @@ module Octopus
         self.environments = @config['environments']
       end
     else
+      p "not using shards"
       if @config.nil? or not @config.empty?
         @config ||= HashWithIndifferentAccess.new
       end
     end
+    p @config
 
     @config
   end
