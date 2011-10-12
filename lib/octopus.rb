@@ -15,7 +15,9 @@ module Octopus
 
     Rails.logger.debug "exists - #{File.exists?("tmp/replication_down")}"
     Rails.logger.debug "nil - #{@config.nil?}"
-    Rails.logger.debug "empty - #{@config.empty?}"
+    unless @config.nil?
+      Rails.logger.debug "empty - #{@config.empty?}"
+    end
 
     if File.exists?(file_name) and not File.exists?("tmp/replication_down")
       Rails.logger.debug "using shards"
