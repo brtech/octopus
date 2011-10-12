@@ -13,6 +13,10 @@ module Octopus
   def self.config()
     file_name = Octopus.directory() + "/config/shards.yml"
 
+    Rails.logger.debug "exists - #{File.exists?("tmp/replication_down")}"
+    Rails.logger.debug "nil - #{@config.nil?}"
+    Rails.logger.debug "empty - #{@config.empty?}"
+
     if File.exists?(file_name) and not File.exists?("tmp/replication_down")
       Rails.logger.debug "using shards"
 
